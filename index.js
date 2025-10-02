@@ -1,8 +1,9 @@
+require("dotenv").config()
 const express = require("express");
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT;
 const pgp = require('pg-promise')();
-const db = pgp('postgres://postgres:admin@localhost:5432/postgres');
+const db = pgp(`postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@localhost:5432/${process.env.DB_DATABASE}`);
 const cors = require("cors");
 
 app.use(express.json());
