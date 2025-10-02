@@ -12,9 +12,11 @@ app.use(cors())
 app.post("/obtenerEmpleadosPorRut", (req, res) => {
   const { runEmpleado } = req.body;
 
+  let rutLimpio = runEmpleado.replace(/\D/g, '');
+
   const query = "SELECT pa.anio, emp.empl_rut, emp.empl_nombres || ' ' || emp.empl_ape_paterno || ' ' || emp.empl_ape_materno as nombre_completo, pa.dias_disponibles_semestre1, pa.dias_utilizados_semestre1, pa.dias_disponibles_semestre2, pa.dias_utilizados_semestre2 FROM admingestionweb.permiso_administrativo AS pa INNER JOIN admingestionweb.empleado AS emp ON emp.empl_rut = pa.run_empleado WHERE run_empleado=$1 ORDER BY pa.anio desc;"
 
-  db.any(query, [runEmpleado])
+  db.any(query, [rutLimpio])
     .then(data => {
       res.status(200).json({ msg: "Busqueda exitosa", nombreEmpleado: data[0].nombre_completo, runEmpleado: data[0].empl_rut, empleado: data });
     })
